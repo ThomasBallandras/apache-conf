@@ -14,7 +14,12 @@ ServerRoot <%= ENV['APACHE_DIR'] %>
 LoadModule mpm_event_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_mpm_event.so
 LoadModule access_compat_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_access_compat.so
 LoadModule authz_host_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_authz_host.so
+<% if ENV['APACHE_MODE'] == 'openidc' %>
 LoadModule auth_openidc_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_openidc.so
+<% end %>
+<% if ENV['APACHE_MODE'] == 'mellon' %>
+LoadModule auth_mellon_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_mellon.so
+<% end %>
 
 # DocumentRoot: The directory out of which you will serve your documents.
 DocumentRoot "<%= ENV['HOME'] %>"
