@@ -1,3 +1,3 @@
 #!/bin/bash
 
-$BUILD_DIR/.apt/usr/sbin/apache2 -f "$BUILD_DIR/httpd.conf"
+/app/vendor/apache2/usr/sbin/apache2 -f "/app/vendor/apache2/conf/httpd.conf"
