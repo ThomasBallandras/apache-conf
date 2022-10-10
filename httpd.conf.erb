@@ -21,18 +21,48 @@ LoadModule auth_openidc_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/
 LoadModule auth_mellon_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_mellon.so
 <% end %>
 
-# DocumentRoot: The directory out of which you will serve your documents.
-DocumentRoot "<%= ENV['HOME'] %>"
-    
-# Access Control for the document base directory
-<Directory "<%= ENV['HOME'] %>">
-    # Show directory listing, and allow symbolic links
-    Options Indexes FollowSymLinks
- 
-    # Cannot override with .htaccess files.
-    AllowOverride None
- 
-    # Controls who can get stuff from this server.
-    Order allow,deny
-    Allow from all
-</Directory>
+<VirtualHost *:443>
+OIDCProviderIssuer https://app.franceconnect.gouv.fr
+OIDCClientID xxxx
+OIDCClientSecret xxx
+OIDCProviderTokenEndpointAuth client_secret_post
+OIDCProviderAuthorizationEndpoint https://app.franceconnect.gouv.fr/api/v1/authorize
+OIDCProviderTokenEndpoint https://app.franceconnect.gouv.fr/api/v1/token
+OIDCProviderUserInfoEndpoint https://app.franceconnect.gouv.fr/api/v1/userinfo
+OIDCProviderEndSessionEndpoint https://app.franceconnect.gouv.fr/api/v1/logout
+OIDCScope "email openid birthdate birthplace given_name family_name birthcountry gender"
+OIDCRedirectURI "https://fc.montransportexceptionnel.interieur.gouv.fr/login-callback"
+OIDCCryptoPassphrase "secret"
+OIDCPassClaimsAs headers
+OIDCAuthRequestParams "acr_values=eidas1"
+OIDCSessionInactivityTimeout 1800
+Header always edit Set-Cookie (.*) "$1; Secure"
+#SSI_V1: Activation de l option Strict-Transport-Security
+Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+<Location /login-callback>
+AuthType openid-connect
+Require valid-user
+LogLevel debug
+</Location>
+
+<Location /api-portail>
+AuthType openid-connect
+Require valid-user
+ProxyPass http://xxx.xxx.xxx.xxx:443/api-portail
+ProxyPassReverse http://xxx.xxx.xxx.xxx:443/api-portail
+</Location>
+
+<Location /api-sig>
+AuthType openid-connect
+Require valid-user
+ProxyPass http://xxx.xxx.xxx.xxx:443/api-sig
+ProxyPassReverse http://xxx.xxx.xxx.xxx:443/api-sig
+</Location>
+
+<Location /noprotected>
+ProxyPass http://xxx.xxx.xxx.xxx:443/noprotected
+ProxyPassReverse http://xxx.xxx.xxx.xxx:443/noprotected
+</Location>
+
+</VirtualHost>
