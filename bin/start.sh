@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/app/vendor/apache2/usr/sbin/apache2 -f "/app/vendor/apache2/conf/httpd.conf"
+exec /app/vendor/apache2/usr/sbin/apache2 -f "/app/vendor/apache2/conf/httpd.conf"
