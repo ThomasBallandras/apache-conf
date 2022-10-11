@@ -12,16 +12,23 @@ ServerName tb-testbp.osc-fr1.scalingo.io:<%= ENV['PORT'] %>
 # ServerRoot <%= ENV['APACHE_DIR'] %>
 ServerRoot /app/vendor/apache2
 
-LoadModule mpm_event_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_mpm_event.so
-LoadModule access_compat_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_access_compat.so
-LoadModule authz_host_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_authz_host.so
-LoadModule headers_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_headers.so
-LoadModule rewrite_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_rewrite.so
+#LoadModule mpm_event_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_mpm_event.so
+#LoadModule access_compat_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_access_compat.so
+#LoadModule authz_host_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_authz_host.so
+#LoadModule headers_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_headers.so
+#LoadModule rewrite_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_rewrite.so
+LoadModule mpm_event_module /app/.apt/usr/lib/apache2/modules/mod_mpm_event.so
+LoadModule access_compat_module /app/.apt/usr/lib/apache2/modules/mod_access_compat.so
+LoadModule authz_host_module /app/.apt/usr/lib/apache2/modules/mod_authz_host.so
+LoadModule headers_module /app/.apt/usr/lib/apache2/modules/mod_headers.so
+LoadModule rewrite_module /app/.apt/usr/lib/apache2/modules/mod_rewrite.so
 <% if ENV['APACHE_MODE'] == 'openidc' %>
-LoadModule auth_openidc_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_openidc.so
+#LoadModule auth_openidc_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_openidc.so
+LoadModule auth_openidc_module /app/.apt/usr/lib/apache2/modules/mod_auth_openidc.so
 <% end %>
 <% if ENV['APACHE_MODE'] == 'mellon' %>
-LoadModule auth_mellon_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_mellon.so
+#LoadModule auth_mellon_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_mellon.so
+LoadModule auth_mellon_module /app/.apt/usr/lib/apache2/modules/mod_auth_mellon.so
 <% end %>
 
 <VirtualHost *:443>
