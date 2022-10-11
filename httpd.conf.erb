@@ -20,6 +20,7 @@ ServerRoot /app/vendor/apache2
 LoadModule mpm_event_module /app/.apt/usr/lib/apache2/modules/mod_mpm_event.so
 LoadModule access_compat_module /app/.apt/usr/lib/apache2/modules/mod_access_compat.so
 LoadModule authz_host_module /app/.apt/usr/lib/apache2/modules/mod_authz_host.so
+LoadModule dir_module /app/.apt/usr/lib/apache2/modules/mod_dir.so
 #LoadModule headers_module /app/.apt/usr/lib/apache2/modules/mod_headers.so
 #LoadModule rewrite_module /app/.apt/usr/lib/apache2/modules/mod_rewrite.so
 #<% if ENV['APACHE_MODE'] == 'openidc' %>
