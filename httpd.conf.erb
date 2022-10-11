@@ -31,6 +31,8 @@ LoadModule authz_host_module /app/.apt/usr/lib/apache2/modules/mod_authz_host.so
 #LoadModule auth_mellon_module /app/.apt/usr/lib/apache2/modules/mod_auth_mellon.so
 #<% end %>
 
+PidFile /app/vendor/apache2/apache2.pid
+
 # DocumentRoot: The directory out of which you will serve your documents.
 DocumentRoot "/app"
     
