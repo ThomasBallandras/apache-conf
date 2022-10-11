@@ -34,10 +34,10 @@ LoadModule authz_host_module /app/.apt/usr/lib/apache2/modules/mod_authz_host.so
 PidFile /app/vendor/apache2/logs/apache2.pid
 
 # DocumentRoot: The directory out of which you will serve your documents.
-DocumentRoot "/app"
+DocumentRoot "/app/vendor/apache2/www"
     
 # Access Control for the document base directory
-<Directory "/app">
+<Directory "/app/vendor/apache2/www">
     # Show directory listing, and allow symbolic links
     Options Indexes FollowSymLinks
  
@@ -49,4 +49,4 @@ DocumentRoot "/app"
     Allow from all
 </Directory>
 
-DirectoryIndex index.html index.html.var
+DirectoryIndex index.html
