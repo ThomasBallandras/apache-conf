@@ -1,49 +1,45 @@
-# Listen: Allows you to bind Apache to specific IP addresses and/or ports.
-Listen <%= ENV['PORT'] %>
+ServerName tb-testbp.osc-fr1.scalingo.io:<%= ENV['PORT'] %>
+ServerAdmin root@localhost
+ServerRoot <%= "#{ENV["HOME"]}/vendor/apache2" %>
 User appsdeck
 Group appsdeck
-###
-# ServerName gives the name and port that the server uses to identify itself.
-# If your host doesn't have a registered DNS name, enter its IP address here.
-ServerName tb-testbp.osc-fr1.scalingo.io:<%= ENV['PORT'] %>
-# ServerRoot: The top of the directory tree under which the server's
-# configuration, error, and log files are kept.
-# Assume that Apache HTTP server is installed in "d:\myProject\apache2"
-# ServerRoot <%= ENV['APACHE_DIR'] %>
-
-ServerRoot <%= "#{ENV["HOME"]}/vendor/apache2" %>
-
-#LoadModule mpm_event_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_mpm_event.so
-#LoadModule access_compat_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_access_compat.so
-#LoadModule authz_host_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_authz_host.so
-#LoadModule headers_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_headers.so
-#LoadModule rewrite_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_rewrite.so
-LoadModule mpm_event_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_mpm_event.so
-LoadModule access_compat_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_access_compat.so
-LoadModule authz_host_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_authz_host.so
-LoadModule dir_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_dir.so
-#LoadModule headers_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_headers.so
-#LoadModule rewrite_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_rewrite.so
-
-#<% if ENV['APACHE_MODE'] == 'openidc' %>
-#LoadModule auth_openidc_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_openidc.so
-#LoadModule auth_openidc_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_auth_openidc.so
-#<% end %>
-#<% if ENV['APACHE_MODE'] == 'mellon' %>
-#LoadModule auth_mellon_module <%= ENV['APACHE_DIR'] %>/usr/lib/apache2/modules/mod_auth_mellon.so
-#LoadModule auth_mellon_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_auth_mellon.so
-#<% end %>
 PidFile <%= ENV["HOME"] %>/vendor/apache2/logs/apache2.pid
-# DocumentRoot: The directory out of which you will serve your documents.
-DocumentRoot "<%= ENV["HOME"] %>/vendor/apache2/www"
-# Access Control for the document base directory
-<Directory "<%= ENV["HOME"] %>/vendor/apache2/www">
-    # Show directory listing, and allow symbolic links
-    Options Indexes FollowSymLinks
-    # Cannot override with .htaccess files.
-    AllowOverride None
-    # Controls who can get stuff from this server.
-    Order allow,deny
-    Allow from all
+
+#ServerTokens            Prod
+#UseCanonicalName        On
+#TraceEnable             Off
+
+Timeout 10
+MaxRequestWorkers 100
+
+Listen <%= ENV['PORT'] %>
+
+LoadModule mpm_event_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_mpm_event.so
+LoadModule unixd_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_unixd.so
+LoadModule access_compat_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_access_compat.so
+LoadModule dir_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_dir.so
+LoadModule log_config_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_log_config.so
+LoadModule authn_core_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_authn_core.so
+LoadModule authz_core_module <%= ENV["HOME"] %>/.apt/usr/lib/apache2/modules/mod_authz_core.so
+
+ErrorLogFormat "[%{cu}t] [%-m:%-l] %-a %-L %M"
+LogFormat               "%h %l %u [%{%Y-%m-%d %H:%M:%S}t.%{usec_frac}t] \"%r\" %>s %b \
+\"%{Referer}i\" \"%{User-Agent}i\"" combined
+
+LogLevel debug
+ErrorLog logs/error_log
+CustomLog logs/access_log combined
+
+DocumentRoot <%= ENV["HOME"] %>/vendor/apache2/www
+
+<Directory />
+    Require all denied
+    Options SymLinksIfOwnerMatch
 </Directory>
-DirectoryIndex index.html index.php
+
+<VirtualHost 127.0.0.1:80>
+      <Directory <%= ENV["HOME"] %>/vendor/apache2/www>
+        Require all granted
+        Options None
+      </Directory>
+</VirtualHost>
